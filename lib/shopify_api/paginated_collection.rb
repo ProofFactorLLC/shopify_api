@@ -10,12 +10,10 @@ module ShopifyAPI
       end
 
       def next_page?
-        ensure_available
         @next_url.present?
       end
 
       def previous_page?
-        ensure_available
         @previous_url.present?
       end
 
@@ -41,7 +39,6 @@ module ShopifyAPI
       AVAILABLE_IN_VERSION_EARLY = ::ShopifyAPI::ApiVersion.find_version('2019-07')
 
       def fetch_page(url)
-        ensure_available
         return [] unless url.present?
 
         resource_class.all(from: url)
@@ -51,12 +48,6 @@ module ShopifyAPI
         @pagination_link_headers ||= ::ShopifyAPI::PaginationLinkHeaders.new(
           ::ShopifyAPI::Base.connection.response["Link"]
         )
-      end
-
-      def ensure_available
-        return if ::ShopifyAPI::Base.api_version >= AVAILABLE_IN_VERSION
-        return if ::ShopifyAPI::Base.api_version >= AVAILABLE_IN_VERSION_EARLY && resource_class.early_july_pagination?
-        raise NotImplementedError
       end
 
       def extract_page_info(url)
