@@ -37,8 +37,8 @@ module ShopifyAPI
 
       private
 
-      AVAILABLE_IN_VERSION = ShopifyAPI::ApiVersion.find_version('2019-10')
-      AVAILABLE_IN_VERSION_EARLY = ShopifyAPI::ApiVersion.find_version('2019-07')
+      AVAILABLE_IN_VERSION = ::ShopifyAPI::ApiVersion.find_version('2019-10')
+      AVAILABLE_IN_VERSION_EARLY = ::ShopifyAPI::ApiVersion.find_version('2019-07')
 
       def fetch_page(url)
         ensure_available
@@ -48,14 +48,14 @@ module ShopifyAPI
       end
 
       def pagination_link_headers
-        @pagination_link_headers ||= ShopifyAPI::PaginationLinkHeaders.new(
-          ShopifyAPI::Base.connection.response["Link"]
+        @pagination_link_headers ||= ::ShopifyAPI::PaginationLinkHeaders.new(
+          ::ShopifyAPI::Base.connection.response["Link"]
         )
       end
 
       def ensure_available
-        return if ShopifyAPI::Base.api_version >= AVAILABLE_IN_VERSION
-        return if ShopifyAPI::Base.api_version >= AVAILABLE_IN_VERSION_EARLY && resource_class.early_july_pagination?
+        return if ::ShopifyAPI::Base.api_version >= AVAILABLE_IN_VERSION
+        return if ::ShopifyAPI::Base.api_version >= AVAILABLE_IN_VERSION_EARLY && resource_class.early_july_pagination?
         raise NotImplementedError
       end
 
